@@ -21,9 +21,14 @@
             display: inline-block;
             background: url('miner1.png') no-repeat center center;
             background-size: contain;
+            animation: miner-animation 1s steps(4) infinite;
         }
         .miner.level2 {
             background: url('miner2.png') no-repeat center center;
+        }
+        @keyframes miner-animation {
+            from { background-position: 0 0; }
+            to { background-position: -200px 0; } /* Assuming the sprite sheet width is 200px for 4 frames */
         }
     </style>
 </head>
