@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mining Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #mine {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+        .miner {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            background: url('miner1.png') no-repeat center center;
+            background-size: contain;
+        }
+        .miner.level2 {
+            background: url('miner2.png') no-repeat center center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mining Game</h1>
+    <div id="mine">
+        <div id="miners"></div>
+        <p>Coins: <span id="coins">0</span></p>
+        <p>Next Upgrade Cost: <span id="upgradeCost">2000</span> coins</p>
+        <button id="mineButton">Start Mining</button>
+        <button id="upgradeButton">Upgrade</button>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
