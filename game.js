@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         level: parseInt(localStorage.getItem('level')) || 1,
         earnRate: 0.1,
         upgradeCost: 2000,
-        miners: 0
+        miners: parseInt(localStorage.getItem('miners')) || 0 // Initialize miners from localStorage
     };
 
     // Update UI function
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('coins').textContent = player.coins.toFixed(1);
         document.getElementById('level').textContent = player.level;
         document.getElementById('earnRate').textContent = player.earnRate.toFixed(1);
+        document.getElementById('upgradeCost').textContent = player.upgradeCost.toFixed(1); // Update upgrade cost display
     }
 
     // Handle mining
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Handle upgrading miners
-    function upgrade() {
+    window.upgrade = function() { // Define upgrade function in global scope
         if (player.coins >= player.upgradeCost) {
             player.miners++;
             player.coins -= player.upgradeCost;
