@@ -3,43 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mining Game</title>
+    <title>Telegram Mini Game</title>
     <style>
         body {
+            margin: 0;
+            overflow: hidden;
             font-family: Arial, sans-serif;
-            text-align: center;
+            background-color: #f0f0f0;
         }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         #mine {
-            margin: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            display: inline-block;
+            width: 120px;
+            height: 120px;
+            background: url('mine.png') no-repeat center center;
+            background-size: contain;
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            cursor: pointer;
+            animation: float 3s infinite alternate;
         }
+
         .miner {
             width: 50px;
             height: 50px;
-            display: inline-block;
             background: url('miner1.png') no-repeat center center;
             background-size: contain;
-            animation: miner-animation 1s steps(4) infinite;
+            position: absolute;
+            animation: spin 1s infinite linear;
         }
-        .miner.level2 {
-            background: url('miner2.png') no-repeat center center;
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
         }
-        @keyframes miner-animation {
-            from { background-position: 0 0; }
-            to { background-position: -200px 0; } /* Assuming the sprite sheet width is 200px for 4 frames */
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #ui {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info span {
+            margin-bottom: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <h1>Mining Game</h1>
-    <div id="mine">
-        <div id="miners"></div>
-        <p>Coins: <span id="coins">0</span></p>
-        <p>Next Upgrade Cost: <span id="upgradeCost">2000</span> coins</p>
-        <button id="mineButton">Start Mining</button>
-        <button id="upgradeButton">Upgrade</button>
+    <div id="game-container">
+        <div id="mine" onclick="mine()">
+            <!-- Mine graphic -->
+        </div>
+        <!-- Miners will be dynamically added here -->
+    </div>
+    <div id="ui">
+        <div class="info">
+            <span>Coins: <span id="coins">0</span></span>
+            <span>Level: <span id="level">1</span></span>
+        </div>
+        <div class="info">
+            <span>Earn Rate: <span id="earnRate">0.1</span> coins/sec</span>
+            <button onclick="upgrade()">Upgrade</button>
+        </div>
     </div>
     <script src="game.js"></script>
 </body>
