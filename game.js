@@ -6,6 +6,7 @@ let coins = 0;
 let miners = 0;
 let nextUpgradeCost = START_PRICE;
 let lastMineTime = 0;
+let miningInterval;
 
 document.getElementById('mineButton').addEventListener('click', startMining);
 document.getElementById('upgradeButton').addEventListener('click', upgrade);
@@ -14,12 +15,18 @@ function startMining() {
     const now = Date.now();
 
     if (now - lastMineTime >= MINING_INTERVAL) {
-        const coinsEarned = miners * (MINING_INTERVAL / 1000);
-        coins += coinsEarned;
         lastMineTime = now;
-        
-        document.getElementById('coins').innerText = coins;
-        alert(`You have mined ${coinsEarned} coins.`);
+
+        if (miningInterval) {
+            clearInterval(miningInterval);
+        }
+
+        miningInterval = setInterval(() => {
+            coins += miners;
+            document.getElementById('coins').innerText = coins;
+        }, 1000);
+
+        alert("Mining started! You will earn coins every second.");
     } else {
         alert("You can only mine once every 6 hours.");
     }
