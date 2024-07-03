@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     let coins = 100;
-    let slots = 6;
+    let slots = 4;
     let miners = [];
     let minerPrice = 100;
 
@@ -22,12 +22,37 @@ document.addEventListener("DOMContentLoaded", function() {
         miner.dataset.level = level;
         miner.draggable = true;
         miner.addEventListener("dragstart", onDragStart);
+        miner.addEventListener("touchstart", onTouchStart, { passive: true });
         return miner;
     }
 
     function onDragStart(event) {
         event.dataTransfer.setData("text", event.target.dataset.level);
         event.dataTransfer.setData("minerId", miners.indexOf(event.target));
+    }
+
+    function onTouchStart(event) {
+        const miner = event.target;
+        miner.classList.add("dragging");
+        const touchMoveHandler = (moveEvent) => {
+            const touch = moveEvent.touches[0];
+            miner.style.position = 'absolute';
+            miner.style.left = `${touch.clientX - miner.offsetWidth / 2}px`;
+            miner.style.top = `${touch.clientY - miner.offsetHeight / 2}px`;
+        };
+        const touchEndHandler = () => {
+            miner.classList.remove("dragging");
+            miner.style.position = 'static';
+            document.removeEventListener('touchmove', touchMoveHandler);
+            document.removeEventListener('touchend', touchEndHandler);
+            document.elementsFromPoint(miner.getBoundingClientRect().left, miner.getBoundingClientRect().top).forEach(el => {
+                if (el.classList.contains('slot') && !el.firstChild) {
+                    el.appendChild(miner);
+                }
+            });
+        };
+        document.addEventListener('touchmove', touchMoveHandler);
+        document.addEventListener('touchend', touchEndHandler);
     }
 
     function onDrop(event) {
@@ -41,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const existingLevel = parseInt(existingMiner.dataset.level);
             if (existingLevel === level) {
                 this.removeChild(existingMiner);
+                miners = miners.filter(m => m !== existingMiner);
                 const newMiner = createMiner(level + 1);
                 miners.push(newMiner);
                 this.appendChild(newMiner);
@@ -65,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
             minerPrice *= 2;
             const miner = createMiner();
             miners.push(miner);
-            for (const slot of miningSlotsEls) {
+            for (const slot of nonWorkingSlotsEls) {
                 if (!slot.firstChild) {
                     slot.appendChild(miner);
                     break;
@@ -94,6 +120,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
         updateStats();
     }
+
+    // Initialize with one level 1 miner in the non-working slot
+    const initialMiner = createMiner();
+    miners.push(initialMiner);
+    nonWorkingSlotsEls[0].appendChild(initialMiner);
 
     setInterval(mineCoins, 1000);
     updateStats();
