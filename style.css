@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+#game {
+    width: 300px;
+    text-align: center;
+}
+
+#stats {
+    margin-bottom: 20px;
+}
+
+#miners, #non-working-miners {
+    margin-bottom: 20px;
+}
+
+#miners h3, #non-working-miners h3 {
+    margin: 10px 0;
+}
+
+#miners, #non-working-miners {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.slot {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.miner {
+    width: 60px;
+    height: 60px;
+    background-color: gold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
