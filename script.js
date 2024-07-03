@@ -1,131 +1,79 @@
-document.addEventListener("DOMContentLoaded", function() {
-    let coins = 100;
-    let slots = 4;
-    let miners = [];
-    let minerPrice = 100;
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
 
-    const coinsEl = document.getElementById("coins");
-    const slotsEl = document.getElementById("slots");
-    const buyMinerBtn = document.getElementById("buyMiner");
-    const miningSlotsEls = document.querySelectorAll("#miners .slot");
-    const nonWorkingSlotsEls = document.querySelectorAll("#non-working-miners .slot");
+#game {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
 
-    function updateStats() {
-        coinsEl.textContent = coins;
-        slotsEl.textContent = slots;
-    }
+#stats {
+    margin-bottom: 20px;
+}
 
-    function createMiner(level = 1) {
-        const miner = document.createElement("div");
-        miner.classList.add("miner");
-        miner.textContent = level;
-        miner.dataset.level = level;
-        miner.draggable = true;
-        miner.addEventListener("dragstart", onDragStart);
-        miner.addEventListener("touchstart", onTouchStart, { passive: true });
-        return miner;
-    }
+#miners, #non-working-miners {
+    margin-bottom: 20px;
+}
 
-    function onDragStart(event) {
-        event.dataTransfer.setData("text", event.target.dataset.level);
-        event.dataTransfer.setData("minerId", miners.indexOf(event.target));
-    }
+#miners h3, #non-working-miners h3 {
+    margin: 10px 0;
+}
 
-    function onTouchStart(event) {
-        const miner = event.target;
-        miner.classList.add("dragging");
-        const touchMoveHandler = (moveEvent) => {
-            const touch = moveEvent.touches[0];
-            miner.style.position = 'absolute';
-            miner.style.left = `${touch.clientX - miner.offsetWidth / 2}px`;
-            miner.style.top = `${touch.clientY - miner.offsetHeight / 2}px`;
-        };
-        const touchEndHandler = () => {
-            miner.classList.remove("dragging");
-            miner.style.position = 'static';
-            document.removeEventListener('touchmove', touchMoveHandler);
-            document.removeEventListener('touchend', touchEndHandler);
-            document.elementsFromPoint(miner.getBoundingClientRect().left, miner.getBoundingClientRect().top).forEach(el => {
-                if (el.classList.contains('slot') && !el.firstChild) {
-                    el.appendChild(miner);
-                }
-            });
-        };
-        document.addEventListener('touchmove', touchMoveHandler);
-        document.addEventListener('touchend', touchEndHandler);
-    }
+#miners, #non-working-miners {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+}
 
-    function onDrop(event) {
-        event.preventDefault();
-        const level = parseInt(event.dataTransfer.getData("text"));
-        const minerId = event.dataTransfer.getData("minerId");
-        const miner = miners[minerId];
+.slot {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-        if (this.firstChild) {
-            const existingMiner = this.firstChild;
-            const existingLevel = parseInt(existingMiner.dataset.level);
-            if (existingLevel === level) {
-                this.removeChild(existingMiner);
-                miners = miners.filter(m => m !== existingMiner);
-                const newMiner = createMiner(level + 1);
-                miners.push(newMiner);
-                this.appendChild(newMiner);
-                coins += (level + 1) * 100;
-                updateStats();
-                return;
-            }
-        }
+.slot:hover {
+    background-color: #f0f0f0;
+}
 
-        miners.splice(minerId, 1);
-        miners.push(miner);
-        this.appendChild(miner);
-    }
+.miner {
+    width: 60px;
+    height: 60px;
+    background-color: gold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
 
-    function onDragOver(event) {
-        event.preventDefault();
-    }
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-    buyMinerBtn.addEventListener("click", function() {
-        if (coins >= minerPrice) {
-            coins -= minerPrice;
-            minerPrice *= 2;
-            const miner = createMiner();
-            miners.push(miner);
-            for (const slot of nonWorkingSlotsEls) {
-                if (!slot.firstChild) {
-                    slot.appendChild(miner);
-                    break;
-                }
-            }
-            updateStats();
-        }
-    });
-
-    for (const slot of miningSlotsEls) {
-        slot.addEventListener("dragover", onDragOver);
-        slot.addEventListener("drop", onDrop);
-    }
-
-    for (const slot of nonWorkingSlotsEls) {
-        slot.addEventListener("dragover", onDragOver);
-        slot.addEventListener("drop", onDrop);
-    }
-
-    function mineCoins() {
-        miningSlotsEls.forEach(slot => {
-            if (slot.firstChild) {
-                const level = parseInt(slot.firstChild.dataset.level);
-                coins += level;
-            }
-        });
-        updateStats();
-    }
-
-    // Initialize with one level 1 miner in the non-working slot
-    const initialMiner = createMiner();
-    miners.push(initialMiner);
-    nonWorkingSlotsEls[0].appendChild(initialMiner);
-
-    setInterval(mineCoins, 1000);
-    updateStats();
-});
+button:hover {
+    background-color: #0056b3;
+}
