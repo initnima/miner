@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     dropElement.appendChild(newMiner);
                     miners = miners.filter(m => m !== existingMiner && m !== miner);
                     miners.push(newMiner);
+                    miner.parentElement.removeChild(miner); // Remove the old miner from its parent
                 }
             }
             updateStats();
@@ -92,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 this.appendChild(newMiner);
                 miners = miners.filter(m => m !== existingMiner && m !== miner);
                 miners.push(newMiner);
+                miner.parentElement.removeChild(miner); // Remove the old miner from its parent
             }
         } else if (!this.firstChild) {
             miners.splice(minerId, 1);
