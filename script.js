@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function onDragStart(event) {
-        event.dataTransfer.setData("text", event.target.dataset.level);
+        event.dataTransfer.setData("level", event.target.dataset.level);
         event.dataTransfer.setData("minerId", miners.indexOf(event.target));
     }
 
@@ -56,17 +56,17 @@ document.addEventListener("DOMContentLoaded", function() {
             document.removeEventListener('touchend', touchEndHandler);
 
             const dropElement = document.elementFromPoint(endEvent.changedTouches[0].clientX, endEvent.changedTouches[0].clientY);
-            if (dropElement && dropElement.classList.contains('slot')) {
+            if (dropElement && dropElement.classList.contains('slot') && dropElement !== miner.parentElement) {
                 if (!dropElement.firstChild) {
                     dropElement.appendChild(miner);
                 } else if (dropElement.firstChild.dataset.level === miner.dataset.level) {
                     const existingMiner = dropElement.firstChild;
-                    miners = miners.filter(m => m !== existingMiner);
                     dropElement.removeChild(existingMiner);
-                    const newMiner = createMiner(parseInt(miner.dataset.level) + 1);
-                    miners.push(newMiner);
+                    const newLevel = parseInt(miner.dataset.level) + 1;
+                    const newMiner = createMiner(newLevel);
                     dropElement.appendChild(newMiner);
-                    coins += (parseInt(newMiner.dataset.level)) * 100;
+                    miners = miners.filter(m => m !== existingMiner && m !== miner);
+                    miners.push(newMiner);
                 }
             }
             updateStats();
@@ -78,22 +78,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function onDrop(event) {
         event.preventDefault();
-        const level = parseInt(event.dataTransfer.getData("text"));
+        const level = parseInt(event.dataTransfer.getData("level"));
         const minerId = event.dataTransfer.getData("minerId");
         const miner = miners[minerId];
 
-        if (this.firstChild) {
+        if (this.firstChild && this !== miner.parentElement) {
             const existingMiner = this.firstChild;
             const existingLevel = parseInt(existingMiner.dataset.level);
             if (existingLevel === level) {
                 this.removeChild(existingMiner);
-                miners = miners.filter(m => m !== existingMiner);
-                const newMiner = createMiner(level + 1);
-                miners.push(newMiner);
+                const newLevel = level + 1;
+                const newMiner = createMiner(newLevel);
                 this.appendChild(newMiner);
-                coins += (level + 1) * 100;
+                miners = miners.filter(m => m !== existingMiner && m !== miner);
+                miners.push(newMiner);
             }
-        } else {
+        } else if (!this.firstChild) {
             miners.splice(minerId, 1);
             miners.push(miner);
             this.appendChild(miner);
