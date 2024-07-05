@@ -82,7 +82,7 @@ body {
 .miner {
     width: 60px;
     height: 60px;
-    background: url('/mnt/data/MInerAnimate.gif') no-repeat center center;
+    background: url('MInerAnimate.gif') no-repeat center center;
     background-size: contain;
     border-radius: 50%;
     display: flex;
