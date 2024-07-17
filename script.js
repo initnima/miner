@@ -1,9 +1,25 @@
 document.addEventListener("DOMContentLoaded", function() {
-    let coins = 100;
+    const username = prompt('Enter your username:');
+    if (!username) {
+        alert('Username is required!');
+        return;
+    }
+
+    const users = loadUserData();
+    const user = users.find(user => user.username === username);
+
+    if (user) {
+        initializeGame(user);
+    } else {
+        alert('User not found!');
+    }
+});
+
+function initializeGame(currentUser) {
+    let coins = currentUser.balance;
     let slots = 4;
     let miners = [];
     let minerPrice = 100;
-    let currentUser = null;
 
     const coinsEl = document.getElementById("coins");
     const slotsEl = document.getElementById("slots");
@@ -11,39 +27,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const miningSlotsEls = document.querySelectorAll("#miners .slot");
     const nonWorkingSlotsEls = document.querySelectorAll("#non-working-miners .slot");
 
-    function loadUserData() {
-        return JSON.parse(localStorage.getItem('users')) || [];
-    }
-
-    function saveUserData(users) {
-        localStorage.setItem('users', JSON.stringify(users));
-    }
-
-    function getCurrentUser(username) {
-        const users = loadUserData();
-        return users.find(user => user.username === username);
-    }
-
-    function updateUserCoins(username, amount) {
-        let users = loadUserData();
-        users = users.map(user => {
-            if (user.username === username) {
-                user.balance += amount;
-                if (currentUser && currentUser.username === username) {
-                    coins = user.balance; // Update the current coins variable
-                }
-            }
-            return user;
-        });
-        saveUserData(users);
-    }
-
-    function displayUserCoins() {
-        if (currentUser) {
-            coinsEl.textContent = currentUser.balance;
-        }
+    function updateStats() {
+        coinsEl.textContent = coins;
         slotsEl.textContent = slots;
         buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
+        updateUserCoins(currentUser.username, coins);
+        document.getElementById('playerCoins').innerText = coins + ' coins';
     }
 
     function createMiner(level = 1) {
@@ -149,8 +138,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     break;
                 }
             }
-            updateUserCoins(currentUser.username, -minerPrice); // Deduct coins from user balance
             updateStats();
+        } else {
+            alert('Not enough coins to buy a miner!');
         }
     });
 
@@ -169,30 +159,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (slot.firstChild) {
                 const level = parseInt(slot.firstChild.dataset.level);
                 coins += level;
-                updateUserCoins(currentUser.username, level); // Add mined coins to user balance
             }
         });
         updateStats();
-    }
-
-    function initializeUser() {
-        const username = prompt('Enter your username:');
-        const users = loadUserData();
-        currentUser = users.find(user => user.username === username);
-
-        if (!currentUser) {
-            alert('User not found!');
-            return;
-        }
-
-        coins = currentUser.balance;
-        displayUserCoins();
-    }
-
-    function updateStats() {
-        displayUserCoins();
-        slotsEl.textContent = slots;
-        buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
     }
 
     // Initialize with one level 1 miner in the non-working slot
@@ -201,6 +170,24 @@ document.addEventListener("DOMContentLoaded", function() {
     nonWorkingSlotsEls[0].appendChild(initialMiner);
 
     setInterval(mineCoins, 1000);
-    initializeUser();
     updateStats();
-});
+}
+
+function loadUserData() {
+    return JSON.parse(localStorage.getItem('users')) || [];
+}
+
+function saveUserData(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
+function updateUserCoins(username, balance) {
+    let users = loadUserData();
+    users = users.map(user => {
+        if (user.username === username) {
+            user.balance = balance;
+        }
+        return user;
+    });
+    saveUserData(users);
+}
