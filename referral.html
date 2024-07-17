@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Referral Page</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const username = prompt('Enter your username to view referral information:');
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.username === username);
-
-            if (user) {
-                document.getElementById('referralLink').innerText = `${window.location.origin}/registration.html?referral_code=${user.username}`;
-                document.getElementById('balance').innerText = user.balance + ' coins';
-            } else {
-                alert('User not found!');
-            }
-        });
-    </script>
 </head>
 <body>
     <h1>Your Referral Link</h1>
     <p>Share this link with your friends: <span id="referralLink"></span></p>
     <h2>Your Balance: <span id="balance"></span></h2>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', handleReferral);
+    </script>
 </body>
 </html>
