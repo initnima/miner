@@ -14,7 +14,6 @@
             const user = users.find(user => user.username === username);
 
             if (user) {
-                document.getElementById('playerCoins').innerText = user.balance + ' coins';
                 initializeGame(user);
             } else {
                 alert('User not found!');
@@ -38,6 +37,7 @@
                 slotsEl.textContent = slots;
                 buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
                 updateUserCoins(currentUser.username, coins);
+                document.getElementById('playerCoins').innerText = coins + ' coins';
             }
 
             function createMiner(level = 1) {
@@ -144,6 +144,8 @@
                         }
                     }
                     updateStats();
+                } else {
+                    alert('Not enough coins to buy a miner!');
                 }
             });
 
