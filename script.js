@@ -20,6 +20,7 @@ function initializeGame(currentUser) {
     let slots = 4;
     let miners = [];
     let minerPrice = 100;
+    let miningInterval;
 
     const coinsEl = document.getElementById("coins");
     const slotsEl = document.getElementById("slots");
@@ -135,10 +136,10 @@ function initializeGame(currentUser) {
             for (const slot of nonWorkingSlotsEls) {
                 if (!slot.firstChild) {
                     slot.appendChild(miner);
-                    break;
+                    updateStats();
+                    return; // Stop after placing one miner
                 }
             }
-            updateStats();
         } else {
             alert('Not enough coins to buy a miner!');
         }
@@ -169,7 +170,10 @@ function initializeGame(currentUser) {
     miners.push(initialMiner);
     nonWorkingSlotsEls[0].appendChild(initialMiner);
 
-    setInterval(mineCoins, 1000);
+    if (miningInterval) {
+        clearInterval(miningInterval);
+    }
+    miningInterval = setInterval(mineCoins, 1000);
     updateStats();
 }
 
