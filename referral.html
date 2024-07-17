@@ -10,7 +10,27 @@
     <h2>Your Balance: <span id="balance"></span></h2>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', handleReferral);
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = prompt('Enter your username to view referral information:');
+            if (!username) {
+                alert('Username is required!');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username);
+
+            if (user) {
+                const referralLinkEl = document.getElementById('referralLink');
+                const balanceEl = document.getElementById('balance');
+
+                const referralLink = `${window.location.origin}/registration.html?referral_code=${user.username}`;
+                referralLinkEl.innerText = referralLink;
+                balanceEl.innerText = user.balance + ' coins';
+            } else {
+                alert('User not found!');
+            }
+        });
     </script>
 </body>
 </html>
