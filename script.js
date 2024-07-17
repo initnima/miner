@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let slots = 4;
     let miners = [];
     let minerPrice = 100;
+    let currentUser = null;
 
     const coinsEl = document.getElementById("coins");
     const slotsEl = document.getElementById("slots");
@@ -10,8 +11,37 @@ document.addEventListener("DOMContentLoaded", function() {
     const miningSlotsEls = document.querySelectorAll("#miners .slot");
     const nonWorkingSlotsEls = document.querySelectorAll("#non-working-miners .slot");
 
-    function updateStats() {
-        coinsEl.textContent = coins;
+    function loadUserData() {
+        return JSON.parse(localStorage.getItem('users')) || [];
+    }
+
+    function saveUserData(users) {
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function getCurrentUser(username) {
+        const users = loadUserData();
+        return users.find(user => user.username === username);
+    }
+
+    function updateUserCoins(username, amount) {
+        let users = loadUserData();
+        users = users.map(user => {
+            if (user.username === username) {
+                user.balance += amount;
+                if (currentUser && currentUser.username === username) {
+                    coins = user.balance; // Update the current coins variable
+                }
+            }
+            return user;
+        });
+        saveUserData(users);
+    }
+
+    function displayUserCoins() {
+        if (currentUser) {
+            coinsEl.textContent = currentUser.balance;
+        }
         slotsEl.textContent = slots;
         buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
     }
@@ -119,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     break;
                 }
             }
+            updateUserCoins(currentUser.username, -minerPrice); // Deduct coins from user balance
             updateStats();
         }
     });
@@ -138,9 +169,30 @@ document.addEventListener("DOMContentLoaded", function() {
             if (slot.firstChild) {
                 const level = parseInt(slot.firstChild.dataset.level);
                 coins += level;
+                updateUserCoins(currentUser.username, level); // Add mined coins to user balance
             }
         });
         updateStats();
+    }
+
+    function initializeUser() {
+        const username = prompt('Enter your username:');
+        const users = loadUserData();
+        currentUser = users.find(user => user.username === username);
+
+        if (!currentUser) {
+            alert('User not found!');
+            return;
+        }
+
+        coins = currentUser.balance;
+        displayUserCoins();
+    }
+
+    function updateStats() {
+        displayUserCoins();
+        slotsEl.textContent = slots;
+        buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
     }
 
     // Initialize with one level 1 miner in the non-working slot
@@ -149,5 +201,6 @@ document.addEventListener("DOMContentLoaded", function() {
     nonWorkingSlotsEls[0].appendChild(initialMiner);
 
     setInterval(mineCoins, 1000);
+    initializeUser();
     updateStats();
 });
