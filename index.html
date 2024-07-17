@@ -138,13 +138,17 @@
                     minerPrice *= 2;
                     const miner = createMiner();
                     miners.push(miner);
+                    let minerPlaced = false;
                     for (const slot of nonWorkingSlotsEls) {
-                        if (!slot.firstChild) {
+                        if (!slot.firstChild && !minerPlaced) {
                             slot.appendChild(miner);
-                            updateStats();
-                            return; // Stop after placing one miner
+                            minerPlaced = true;
                         }
                     }
+                    if (!minerPlaced) {
+                        alert('No available slots for new miner!');
+                    }
+                    updateStats();
                 } else {
                     alert('Not enough coins to buy a miner!');
                 }
