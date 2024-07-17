@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invite List</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = prompt('Enter your username to view your invite list:');
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username);
+
+            if (user) {
+                const inviteList = users.filter(u => u.referralCode === username);
+                const inviteListContainer = document.getElementById('inviteList');
+                
+                inviteList.forEach(invitedUser => {
+                    const listItem = document.createElement('li');
+                    listItem.innerText = `Username: ${invitedUser.username}, Coins: ${invitedUser.balance}`;
+                    inviteListContainer.appendChild(listItem);
+                });
+            } else {
+                alert('User not found!');
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Your Invite List</h1>
+    <ul id="inviteList"></ul>
+</body>
+</html>
