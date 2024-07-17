@@ -20,37 +20,9 @@
         <input type="text" id="username" placeholder="Username" required>
         <button type="submit">Register</button>
     </form>
+    <script src="script.js"></script>
     <script>
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const referralCode = localStorage.getItem('referralCode');
-            const username = document.getElementById('username').value;
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-
-            // Check if user already exists
-            if (users.some(user => user.username === username)) {
-                alert('Username already exists!');
-                return;
-            }
-
-            // Add new user
-            const newUser = { username: username, referralCode: referralCode, balance: 0 };
-            users.push(newUser);
-
-            // Update referrer's balance
-            if (referralCode) {
-                users = users.map(user => {
-                    if (user.username === referralCode) {
-                        user.balance += 500;
-                    }
-                    return user;
-                });
-            }
-
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.removeItem('referralCode'); // Clear referral code after registration
-            window.location.href = '/success.html'; // Redirect after registration
-        });
+        document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
     </script>
 </body>
 </html>
