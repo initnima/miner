@@ -7,9 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = prompt('Enter your username:');
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.username === username);
+
+            if (user) {
+                document.getElementById('playerCoins').innerText = user.balance + ' coins';
+            } else {
+                alert('User not found!');
+            }
+        });
+    </script>
+    
     <div id="game">
-            <a href="https://initnima.github.io/miner/referral.html">Referral Page</a>
+    <a href="https://initnima.github.io/miner/referral.html">Referral Page</a>
     <a href="https://initnima.github.io/miner/registration.html">Register</a>
+        <a href="https://initnima.github.io/miner/invite-list.html">View Invite List</a>
         <div id="wallet-connect">
             <button id="connectWallet">Connect Wallet</button>
         </div>
