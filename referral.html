@@ -24,7 +24,7 @@
                 const referralLinkEl = document.getElementById('referralLink');
                 const balanceEl = document.getElementById('balance');
 
-                const referralLink = `${window.location.origin}/registration.html?referral_code=${user.username}`;
+                const referralLink = `${window.location.origin}/miner/registration.html?referral_code=${user.username}`;
                 referralLinkEl.innerText = referralLink;
                 balanceEl.innerText = user.balance + ' coins';
             } else {
