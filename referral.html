@@ -6,29 +6,27 @@
 </head>
 <body>
     <h1>Your Referral Link</h1>
-    <p>Share this link with your friends: <span id="referralLink"></span></p>
-    <h2>Your Balance: <span id="balance"></span></h2>
-    <script src="script.js"></script>
+    <p>Share this link with your friends:</p>
+    <p id="referralLink"></p>
+    <p>Your Balance: <span id="balance"></span></p>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const username = prompt('Enter your username to view referral information:');
-            if (!username) {
-                alert('Username is required!');
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'registration.html';
                 return;
             }
+            const referralLinkEl = document.getElementById('referralLink');
+            const balanceEl = document.getElementById('balance');
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.username === username);
+            referralLinkEl.textContent = `${window.location.origin}/registration.html?referral_code=${currentUser.username}`;
+            balanceEl.textContent = currentUser.balance;
 
-            if (user) {
-                const referralLinkEl = document.getElementById('referralLink');
-                const balanceEl = document.getElementById('balance');
-
-                const referralLink = `${window.location.origin}/miner/registration.html?referral_code=${user.username}`;
-                referralLinkEl.innerText = referralLink;
-                balanceEl.innerText = user.balance + ' coins';
-            } else {
-                alert('User not found!');
+            function getCurrentUser() {
+                const username = localStorage.getItem('currentUser');
+                if (!username) return null;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                return users.find(user => user.username === username);
             }
         });
     </script>
