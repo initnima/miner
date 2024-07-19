@@ -5,11 +5,55 @@
     <title>Invite List</title>
 </head>
 <body>
-    <h1>Your Invite List</h1>
+    <h1>Your Invites</h1>
     <ul id="inviteList"></ul>
-    <script src="script.js"></script>
+    <h2>Your Referral Earnings: <span id="referralEarnings"></span> TON</h2>
+    <button id="withdraw">Withdraw</button>
     <script>
-        document.addEventListener('DOMContentLoaded', displayInviteList);
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'registration.html';
+                return;
+            }
+
+            const inviteListEl = document.getElementById('inviteList');
+            const referralEarningsEl = document.getElementById('referralEarnings');
+            const withdrawBtn = document.getElementById('withdraw');
+
+            function updateInviteList() {
+                inviteListEl.innerHTML = '';
+                currentUser.invites.forEach(invite => {
+                    const li = document.createElement('li');
+                    li.textContent = `User: ${invite.username}, Coins Earned: ${invite.coins}`;
+                    inviteListEl.appendChild(li);
+                });
+                referralEarningsEl.textContent = currentUser.referralEarnings || 0;
+            }
+
+            function getCurrentUser() {
+                const username = localStorage.getItem('currentUser');
+                if (!username) return null;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                return users.find(user => user.username === username);
+            }
+
+            function updateUser(user) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users = users.map(u => u.username === user.username ? user : u);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            withdrawBtn.addEventListener('click', function() {
+                if (currentUser.referralEarnings >= 0.1) {
+                    alert('Withdrawal request sent. Please provide your TON address.');
+                } else {
+                    alert('You need at least 0.1 TON to withdraw.');
+                }
+            });
+
+            updateInviteList();
+        });
     </script>
 </body>
 </html>
