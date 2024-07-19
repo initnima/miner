@@ -221,7 +221,23 @@
                 purchaseModal.style.display = "block";
             }
 
-            buyMinerBtn.addEventListener("click", showPurchaseModal);
+            buyMinerBtn.addEventListener("click", function() {
+                if (coins >= minerPrice) {
+                    coins -= minerPrice;
+                    minerPrice *= 2; // Double the price for the next miner
+                    const miner = createMiner();
+                    miners.push(miner);
+                    for (const slot of nonWorkingSlotsEls) {
+                        if (!slot.firstChild) {
+                            slot.appendChild(miner);
+                            break;
+                        }
+                    }
+                    updateStats();
+                } else {
+                    alert("Not enough coins to buy a miner!");
+                }
+            });
 
             for (const slot of miningSlotsEls) {
                 slot.addEventListener("dragover", onDragOver);
