@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const referralCode = urlParams.get('referral_code');
-            if (referralCode) {
-                localStorage.setItem('referralCode', referralCode);
-            }
-        });
-    </script>
 </head>
 <body>
     <h1>Register</h1>
     <form id="registrationForm">
-        <!-- Registration form fields -->
-        <input type="text" id="username" placeholder="Username" required>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
         <button type="submit">Register</button>
     </form>
-    <script src="script.js"></script>
     <script>
-        document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralCode = urlParams.get('referral_code');
+
+            if (referralCode) {
+                localStorage.setItem('referralCode', referralCode);
+            }
+
+            document.getElementById('registrationForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const username = document.getElementById('username').value;
+                registerUser(username);
+            });
+        });
+
+        function registerUser(username) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(user => user.username === username)) {
+                alert('Username already taken!');
+            } else {
+                const referralCode = localStorage.getItem('referralCode');
+                const newUser = {
+                    username: username,
+                    balance: 100,
+                    referralCode: referralCode,
+                    invites: []
+                };
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', username);
+                alert('Registration successful!');
+                window.location.href = 'index.html'; // Redirect to the main game page after registration
+            }
+        }
     </script>
 </body>
 </html>
