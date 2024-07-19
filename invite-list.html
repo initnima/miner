@@ -23,9 +23,12 @@
 
             function updateInviteList() {
                 inviteListEl.innerHTML = '';
+                const users = JSON.parse(localStorage.getItem('users')) || [];
                 currentUser.invites.forEach(invite => {
+                    const inviteUser = users.find(user => user.username === invite.username);
+                    const coinsMined = inviteUser ? inviteUser.balance : 0;
                     const li = document.createElement('li');
-                    li.textContent = `User: ${invite.username}, Coins Earned: ${invite.coins}`;
+                    li.textContent = `User: ${invite.username}, Coins Mined: ${coinsMined}, Coins Earned: ${invite.coins}`;
                     inviteListEl.appendChild(li);
                 });
                 referralEarningsEl.textContent = currentUser.referralEarnings || 0;
