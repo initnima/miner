@@ -7,6 +7,52 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="game">
+        <p>Your Coins: <span id="playerCoins"></span></p>
+        <a href="referral.html">Referral Page</a>
+        <a href="registration.html">Register</a>
+        <a href="invite-list.html">View Invite List</a>
+        <a href="tasks.html">Tasks</a>
+        <div id="stats">
+            <p>Coins: <span id="coins">100</span></p>
+            <p>Slots: <span id="slots">4</span></p>
+        </div>
+        <div id="miners">
+            <h3>Mining Slots</h3>
+            <div class="slot" data-slot="1"></div>
+            <div class="slot" data-slot="2"></div>
+            <div class="slot" data-slot="3"></div>
+            <div class="slot" data-slot="4"></div>
+        </div>
+        <div id="non-working-miners">
+            <h3>Non-Working Slots</h3>
+            <div class="slot" data-slot="5"></div>
+            <div class="slot" data-slot="6"></div>
+            <div class="slot" data-slot="7"></div>
+            <div class="slot" data-slot="8"></div>
+            <div class="slot" data-slot="9"></div>
+            <div class="slot" data-slot="10"></div>
+            <div class="slot" data-slot="11"></div>
+            <div class="slot" data-slot="12"></div>
+            <div class="slot" data-slot="13"></div>
+            <div class="slot" data-slot="14"></div>
+        </div>
+        <div id="shop">
+            <button id="buyMiner">Buy Miner (100 Coins)</button>
+        </div>
+    </div>
+
+    <div id="purchaseModal" style="display: none;">
+        <div>
+            <button id="closeModal">X</button>
+            <h2>Invite 5 friends: <span id="inviteCount">0</span>/5</h2>
+            <p>30 day free miner spot</p>
+            <p>or</p>
+            <p>buy 1 miner spot: 0.5 TON <button id="buyOneSpot">Buy</button></p>
+            <p>buy 3 miner spots: 1.0 TON (30% off) <button id="buyThreeSpots">Buy</button></p>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const currentUser = getCurrentUser();
@@ -233,54 +279,6 @@
             saveUserData(users);
         }
     </script>
-
-    <div id="game">
-        <p>Your Coins: <span id="playerCoins"></span></p>
-        <a href="referral.html">Referral Page</a>
-        <a href="registration.html">Register</a>
-        <a href="invite-list.html">View Invite List</a>
-        <a href="tasks.html">Tasks</a>
-        <div id="stats">
-            <p>Coins: <span id="coins">100</span></p>
-            <p>Slots: <span id="slots">4</span></p>
-        </div>
-        <div id="miners">
-            <h3>Mining Slots</h3>
-            <div class="slot" data-slot="1"></div>
-            <div class="slot" data-slot="2"></div>
-            <div class="slot" data-slot="3"></div>
-            <div class="slot" data-slot="4"></div>
-        </div>
-        <div id="non-working-miners">
-            <h3>Non-Working Slots</h3>
-            <div class="slot" data-slot="5"></div>
-            <div class="slot" data-slot="6"></div>
-            <div class="slot" data-slot="7"></div>
-            <div class="slot" data-slot="8"></div>
-            <div class="slot" data-slot="9"></div>
-            <div class="slot" data-slot="10"></div>
-            <div class="slot" data-slot="11"></div>
-            <div class="slot" data-slot="12"></div>
-            <div class="slot" data-slot="13"></div>
-            <div class="slot" data-slot="14"></div>
-        </div>
-        <div id="shop">
-            <button id="buyMiner">Buy Miner (100 Coins)</button>
-        </div>
-    </div>
-
-    <div id="purchaseModal" style="display: none;">
-        <div>
-            <button id="closeModal">X</button>
-            <h2>Invite 5 friends: <span id="inviteCount">0</span>/5</h2>
-            <p>30 day free miner spot</p>
-            <p>or</p>
-            <p>buy 1 miner spot: 0.5 TON <button id="buyOneSpot">Buy</button></p>
-            <p>buy 3 miner spots: 1.0 TON (30% off) <button id="buyThreeSpots">Buy</button></p>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
     <script src="https://unpkg.com/@ton-connect/sdk@latest/dist/sdk.umd.js"></script>
 </body>
 </html>
