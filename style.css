@@ -1,97 +1,88 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: black;
+    background-color: #f0f0f0;
+    color: #333;
+    text-align: center;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    color: white;
 }
 
 #game {
-    width: 95%;
-    max-width: 500px;
-    text-align: center;
     background-color: #333;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-}
-
-#wallet-connect {
-    margin-bottom: 20px;
-}
-
-#wallet-connect button, #shop button {
-    padding: 10px 20px;
-    background-color: #007bff;
     color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-#wallet-connect button:hover, #shop button:hover {
-    background-color: #0056b3;
+#game a {
+    color: #00f;
+    text-decoration: none;
+    margin: 5px;
+    display: block;
+}
+
+#game a:hover {
+    text-decoration: underline;
 }
 
 #stats {
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 #miners, #non-working-miners {
-    margin-bottom: 20px;
-}
-
-#miners h3, #non-working-miners h3 {
-    margin: 10px 0;
-}
-
-#miners, #non-working-miners {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .slot {
-    width: 70px;
-    height: 70px;
-    border: 2px dashed #ccc;
+    width: 60px;
+    height: 60px;
+    border: 2px dashed #777;
+    margin: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #444;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    position: relative;
-}
-
-.slot img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.slot:hover {
-    background-color: #555;
 }
 
 .miner {
-    width: 60px;
-    height: 60px;
-    background: url('MInerAnimate.gif') no-repeat center center;
-    background-size: contain;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: white;
-    user-select: none;
+    width: 50px;
+    height: 50px;
+    background-color: #ffa;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 5px;
+    cursor: grab;
+}
+
+#shop {
+    margin: 20px 0;
+}
+
+#purchaseModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#purchaseModal button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+}
+
+#closeModal {
     position: absolute;
-    top: 5px;
-    left: 5px;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
 }
