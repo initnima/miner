@@ -21,12 +21,31 @@ function initializeGame(currentUser) {
     let miners = [];
     let minerPrice = 100;
     let miningInterval;
+    let invites = currentUser.invites || [];
+    const maxInvites = 5;
 
     const coinsEl = document.getElementById("coins");
     const slotsEl = document.getElementById("slots");
     const buyMinerBtn = document.getElementById("buyMiner");
     const miningSlotsEls = document.querySelectorAll("#miners .slot");
     const nonWorkingSlotsEls = document.querySelectorAll("#non-working-miners .slot");
+    const purchaseModal = document.getElementById("purchaseModal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const buyOneSpotBtn = document.getElementById("buyOneSpot");
+    const buyThreeSpotsBtn = document.getElementById("buyThreeSpots");
+    const inviteCountEl = document.getElementById("inviteCount");
+
+    closeModalBtn.addEventListener("click", () => {
+        purchaseModal.style.display = "none";
+    });
+
+    buyOneSpotBtn.addEventListener("click", () => {
+        purchaseSpot(1);
+    });
+
+    buyThreeSpotsBtn.addEventListener("click", () => {
+        purchaseSpot(3);
+    });
 
     function updateStats() {
         coinsEl.textContent = coins;
@@ -34,6 +53,7 @@ function initializeGame(currentUser) {
         buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
         updateUserCoins(currentUser.username, coins);
         document.getElementById('playerCoins').innerText = coins + ' coins';
+        inviteCountEl.textContent = invites.length;
     }
 
     function createMiner(level = 1) {
@@ -127,23 +147,26 @@ function initializeGame(currentUser) {
         event.preventDefault();
     }
 
-    buyMinerBtn.addEventListener("click", function() {
-        if (coins >= minerPrice) {
-            coins -= minerPrice;
-            minerPrice *= 2;
-            const miner = createMiner();
-            miners.push(miner);
-            for (const slot of nonWorkingSlotsEls) {
-                if (!slot.firstChild) {
-                    slot.appendChild(miner);
-                    updateStats();
-                    return; // Stop after placing one miner
-                }
+    function purchaseSpot(spots) {
+        const cost = spots === 1 ? 0.5 : 1.0;
+        // Here you would integrate with your payment gateway to process the payment.
+        // For now, we'll assume the payment is successful.
+        for (let i = 0; i < spots; i++) {
+            if (nonWorkingSlotsEls[i] && !nonWorkingSlotsEls[i].firstChild) {
+                const miner = createMiner();
+                nonWorkingSlotsEls[i].appendChild(miner);
             }
-        } else {
-            alert('Not enough coins to buy a miner!');
         }
-    });
+        purchaseModal.style.display = "none";
+        alert(`${spots} miner spots purchased successfully!`);
+        updateStats();
+    }
+
+    function showPurchaseModal() {
+        purchaseModal.style.display = "block";
+    }
+
+    buyMinerBtn.addEventListener("click", showPurchaseModal);
 
     for (const slot of miningSlotsEls) {
         slot.addEventListener("dragover", onDragOver);
@@ -153,6 +176,11 @@ function initializeGame(currentUser) {
     for (const slot of nonWorkingSlotsEls) {
         slot.addEventListener("dragover", onDragOver);
         slot.addEventListener("drop", onDrop);
+        slot.addEventListener("click", () => {
+            if (!slot.firstChild) {
+                showPurchaseModal();
+            }
+        });
     }
 
     function mineCoins() {
