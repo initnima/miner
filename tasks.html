@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Complete Tasks to Earn Coins</h1>
+    <ul>
+        <li><a href="#" id="telegramLink">Join our Telegram Channel</a> - Earn 500 coins</li>
+        <li><a href="#" id="youtubeLink">Subscribe to our YouTube Channel</a> - Earn 500 coins</li>
+        <li><a href="#" id="twitterLink">Follow us on Twitter</a> - Earn 500 coins</li>
+    </ul>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'registration.html';
+                return;
+            }
+
+            document.getElementById('telegramLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                completeTask('telegram');
+            });
+
+            document.getElementById('youtubeLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                completeTask('youtube');
+            });
+
+            document.getElementById('twitterLink').addEventListener('click', function(event) {
+                event.preventDefault();
+                completeTask('twitter');
+            });
+
+            function completeTask(task) {
+                if (!currentUser.completedTasks) {
+                    currentUser.completedTasks = [];
+                }
+
+                if (currentUser.completedTasks.includes(task)) {
+                    alert('Task already completed!');
+                    return;
+                }
+
+                currentUser.completedTasks.push(task);
+                currentUser.balance += 500;
+                updateUser(currentUser);
+                alert('Task completed! You earned 500 coins.');
+            }
+
+            function getCurrentUser() {
+                const username = localStorage.getItem('currentUser');
+                if (!username) return null;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                return users.find(user => user.username === username);
+            }
+
+            function updateUser(user) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users = users.map(u => u.username === user.username ? user : u);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        });
+    </script>
+</body>
+</html>
