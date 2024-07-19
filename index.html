@@ -143,6 +143,7 @@
                         if (!slot.firstChild && !minerPlaced) {
                             slot.appendChild(miner);
                             minerPlaced = true;
+                            break; // Ensure only one miner is placed
                         }
                     }
                     if (!minerPlaced) {
@@ -211,9 +212,6 @@
         <a href="https://initnima.github.io/miner/referral.html">Referral Page</a>
         <a href="https://initnima.github.io/miner/registration.html">Register</a>
         <a href="https://initnima.github.io/miner/invite-list.html">View Invite List</a>
-        <div id="wallet-connect">
-            <button id="connectWallet">Connect Wallet</button>
-        </div>
         <div id="stats">
             <p>Coins: <span id="coins">100</span></p>
             <p>Slots: <span id="slots">4</span></p>
@@ -242,6 +240,18 @@
             <button id="buyMiner">Buy Miner (100 Coins)</button>
         </div>
     </div>
+
+    <div id="purchaseModal" style="display: none;">
+        <div>
+            <button id="closeModal">X</button>
+            <h2>Invite 5 friends: <span id="inviteCount">0</span>/5</h2>
+            <p>30 day free miner spot</p>
+            <p>or</p>
+            <p>buy 1 miner spot: 0.5 TON <button id="buyOneSpot">Buy</button></p>
+            <p>buy 3 miner spots: 1.0 TON (30% off) <button id="buyThreeSpots">Buy</button></p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="https://unpkg.com/@ton-connect/sdk@latest/dist/sdk.umd.js"></script>
 </body>
