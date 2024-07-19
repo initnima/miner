@@ -37,13 +37,29 @@
                     username: username,
                     balance: 100,
                     referralCode: referralCode,
-                    invites: []
+                    invites: [],
+                    referralEarnings: 0,
+                    completedTasks: []
                 };
                 users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('currentUser', username);
+                if (referralCode) {
+                    rewardReferrer(referralCode, username);
+                }
                 alert('Registration successful!');
                 window.location.href = 'index.html'; // Redirect to the main game page after registration
+            }
+        }
+
+        function rewardReferrer(referralCode, newUsername) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const referrer = users.find(user => user.username === referralCode);
+            if (referrer) {
+                referrer.balance += 500; // Reward 500 coins for the referrer
+                referrer.invites.push({ username: newUsername, coins: 0 });
+                referrer.referralEarnings += 0.001; // Reward 0.001 TON for the referrer
+                localStorage.setItem('users', JSON.stringify(users));
             }
         }
     </script>
