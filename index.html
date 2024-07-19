@@ -9,16 +9,20 @@
 <body>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const username = prompt('Enter your username:');
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(user => user.username === username);
-
-            if (user) {
-                initializeGame(user);
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                window.location.href = 'registration.html';
             } else {
-                alert('User not found!');
+                initializeGame(currentUser);
             }
         });
+
+        function getCurrentUser() {
+            const username = localStorage.getItem('currentUser');
+            if (!username) return null;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            return users.find(user => user.username === username);
+        }
 
         function initializeGame(currentUser) {
             let coins = currentUser.balance;
@@ -26,12 +30,31 @@
             let miners = [];
             let minerPrice = 100;
             let miningInterval;
+            let invites = currentUser.invites || [];
+            const maxInvites = 5;
 
             const coinsEl = document.getElementById("coins");
             const slotsEl = document.getElementById("slots");
             const buyMinerBtn = document.getElementById("buyMiner");
             const miningSlotsEls = document.querySelectorAll("#miners .slot");
             const nonWorkingSlotsEls = document.querySelectorAll("#non-working-miners .slot");
+            const purchaseModal = document.getElementById("purchaseModal");
+            const closeModalBtn = document.getElementById("closeModal");
+            const buyOneSpotBtn = document.getElementById("buyOneSpot");
+            const buyThreeSpotsBtn = document.getElementById("buyThreeSpots");
+            const inviteCountEl = document.getElementById("inviteCount");
+
+            closeModalBtn.addEventListener("click", () => {
+                purchaseModal.style.display = "none";
+            });
+
+            buyOneSpotBtn.addEventListener("click", () => {
+                purchaseSpot(1);
+            });
+
+            buyThreeSpotsBtn.addEventListener("click", () => {
+                purchaseSpot(3);
+            });
 
             function updateStats() {
                 coinsEl.textContent = coins;
@@ -39,6 +62,7 @@
                 buyMinerBtn.textContent = `Buy Miner (${minerPrice} Coins)`;
                 updateUserCoins(currentUser.username, coins);
                 document.getElementById('playerCoins').innerText = coins + ' coins';
+                inviteCountEl.textContent = invites.length;
             }
 
             function createMiner(level = 1) {
@@ -132,28 +156,26 @@
                 event.preventDefault();
             }
 
-            buyMinerBtn.addEventListener("click", function() {
-                if (coins >= minerPrice) {
-                    coins -= minerPrice;
-                    minerPrice *= 2;
-                    const miner = createMiner();
-                    miners.push(miner);
-                    let minerPlaced = false;
-                    for (const slot of nonWorkingSlotsEls) {
-                        if (!slot.firstChild && !minerPlaced) {
-                            slot.appendChild(miner);
-                            minerPlaced = true;
-                            break; // Ensure only one miner is placed
-                        }
+            function purchaseSpot(spots) {
+                const cost = spots === 1 ? 0.5 : 1.0;
+                // Here you would integrate with your payment gateway to process the payment.
+                // For now, we'll assume the payment is successful.
+                for (let i = 0; i < spots; i++) {
+                    if (nonWorkingSlotsEls[i] && !nonWorkingSlotsEls[i].firstChild) {
+                        const miner = createMiner();
+                        nonWorkingSlotsEls[i].appendChild(miner);
                     }
-                    if (!minerPlaced) {
-                        alert('No available slots for new miner!');
-                    }
-                    updateStats();
-                } else {
-                    alert('Not enough coins to buy a miner!');
                 }
-            });
+                purchaseModal.style.display = "none";
+                alert(`${spots} miner spots purchased successfully!`);
+                updateStats();
+            }
+
+            function showPurchaseModal() {
+                purchaseModal.style.display = "block";
+            }
+
+            buyMinerBtn.addEventListener("click", showPurchaseModal);
 
             for (const slot of miningSlotsEls) {
                 slot.addEventListener("dragover", onDragOver);
@@ -163,6 +185,11 @@
             for (const slot of nonWorkingSlotsEls) {
                 slot.addEventListener("dragover", onDragOver);
                 slot.addEventListener("drop", onDrop);
+                slot.addEventListener("click", () => {
+                    if (!slot.firstChild) {
+                        showPurchaseModal();
+                    }
+                });
             }
 
             function mineCoins() {
@@ -209,9 +236,10 @@
 
     <div id="game">
         <p>Your Coins: <span id="playerCoins"></span></p>
-        <a href="https://initnima.github.io/miner/referral.html">Referral Page</a>
-        <a href="https://initnima.github.io/miner/registration.html">Register</a>
-        <a href="https://initnima.github.io/miner/invite-list.html">View Invite List</a>
+        <a href="referral.html">Referral Page</a>
+        <a href="registration.html">Register</a>
+        <a href="invite-list.html">View Invite List</a>
+        <a href="tasks.html">Tasks</a>
         <div id="stats">
             <p>Coins: <span id="coins">100</span></p>
             <p>Slots: <span id="slots">4</span></p>
