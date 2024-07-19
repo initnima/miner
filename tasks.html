@@ -35,10 +35,6 @@
             });
 
             function completeTask(task) {
-                if (!currentUser.completedTasks) {
-                    currentUser.completedTasks = [];
-                }
-
                 if (currentUser.completedTasks.includes(task)) {
                     alert('Task already completed!');
                     return;
