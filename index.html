@@ -13,6 +13,12 @@
         <a href="registration.html">Register</a>
         <a href="invite-list.html">View Invite List</a>
         <a href="tasks.html">Tasks</a>
+        <a id="referral-link" href="#">Referral Page</a>
+<script>
+    document.getElementById('referral-link').href = `referral.html?code=${currentUser.username}`;
+    document.getElementById('playerCoins').innerText = `${currentUser.balance} coins`;
+</script>
+
         <div id="stats">
             <p>Coins: <span id="coins">100</span></p>
             <p>Slots: <span id="slots">4</span></p>
