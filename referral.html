@@ -2,33 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Referral Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Registration</title>
 </head>
 <body>
-    <h1>Your Referral Link</h1>
-    <p>Share this link with your friends:</p>
-    <p id="referralLink"></p>
-    <p>Your Balance: <span id="balance"></span></p>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentUser = getCurrentUser();
-            if (!currentUser) {
-                window.location.href = 'registration.html';
-                return;
-            }
-            const referralLinkEl = document.getElementById('referralLink');
-            const balanceEl = document.getElementById('balance');
-
-            referralLinkEl.textContent = `${window.location.origin}/miner/registration.html?referral_code=${currentUser.username}`;
-            balanceEl.textContent = currentUser.balance;
-
-            function getCurrentUser() {
-                const username = localStorage.getItem('currentUser');
-                if (!username) return null;
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                return users.find(user => user.username === username);
-            }
-        });
-    </script>
+    <h1>Register</h1>
+    <form id="registration-form">
+        <input type="hidden" id="referral-code" name="referral-code" value="">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Register</button>
+    </form>
+    <script src="script.js"></script>
 </body>
 </html>
